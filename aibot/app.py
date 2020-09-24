@@ -1,7 +1,15 @@
 #!/usr/bin/env python3
 
-from aibot import utils
 from time import sleep
+
+from aibot import hw
+from aibot import utils
+from aibot import nav
+
+def init():
+
+	hw.reset_motors()
+	hw.reset_encoders()
 
 def run():
 
@@ -10,4 +18,9 @@ def run():
 	while True:
 
 		utils.print_all()
+		# nav.drive_straight()
 		sleep(0.5)
+
+def exit():
+
+	hw.stop_motors()

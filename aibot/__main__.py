@@ -3,4 +3,13 @@
 from aibot import app
 
 if __name__ == "__main__":
-	app.run()
+
+	try:
+		
+		app.init()
+		app.run()
+
+	except KeyboardInterrupt:
+		
+		print("\n\nInterrupted via CTRL+C")
+		app.exit()
