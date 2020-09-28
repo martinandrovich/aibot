@@ -25,7 +25,23 @@ def forward(speed = 50):
 	while (hw.cs_side.is_white()):
 		sleep(0.1)
 
-	stop()
+	hw.hold_motors()
+
+def forward2(speed = 30):
+
+	speed = hw.mot_l.max_speed * 0.3
+
+	hw.mot_l.position_sp = 615
+	hw.mot_r.position_sp = 610
+
+	hw.mot_l.speed_sp = speed
+	hw.mot_r.speed_sp = speed
+
+	hw.mot_l.stop_action = "hold"
+	hw.mot_r.stop_action = "hold"
+
+	hw.mot_l.run_to_rel_pos()
+	hw.mot_r.run_to_rel_pos()
 
 def turn(dir):
 

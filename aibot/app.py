@@ -8,19 +8,25 @@ from aibot import nav
 
 def init():
 
-	hw.reset_motors()
-	hw.reset_encoders()
+	print("initializing aibot...")
+	
+	hw.motors.stop()
+	hw.motors.reset()
+	
+	sleep(1)
+
+	hw.gs.calibrate()
+
+	print("aibot has been initialized")
 
 def run():
-
-	print("ev3 aibot\n")
 
 	while True:
 
 		utils.print_all()
 		# nav.drive_straight()
-		sleep(0.5)
+		sleep(0.25)
 
 def exit():
 
-	hw.stop_motors()
+	hw.motors.stop()
