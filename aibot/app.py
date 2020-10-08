@@ -24,7 +24,7 @@ def run():
 	while True:
 
 		utils.print_all()
-		# nav.drive_straight()
+		nav.forward_smart()
 		sleep(0.25)
 
 def exit():
