@@ -30,6 +30,7 @@ public:
 	void                     generateHash();
 	bool                     isWallBlocking(Position desired_position);
 	bool                     isGoal();
+
 	std::optional<Position>  isCanMoveValid(Position desired_position);
 
 	inline static std::vector<std::string> m_clean_map = {};

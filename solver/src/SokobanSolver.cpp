@@ -106,8 +106,6 @@ std::string SokobanSolver::getStartHash()
 		hash += line;
 	return hash;
 }
- 
-
 std::string SokobanSolver::solve()
 {
 /*  https://www.codewithc.com/breadth-first-search-in-c/
@@ -131,7 +129,6 @@ std::string SokobanSolver::solve()
 	
 	// The starting State
 	State* start_state = new State(getRobotStart(),getCansStart(),NULL,getMap());
-
 	start_state->m_goal = getGoalPositions();
 	start_state->m_clean_map = getCleanMap();
 
@@ -158,38 +155,44 @@ std::string SokobanSolver::solve()
 		std::cout << *current_state << std::endl;
 		std::cin.get();
 		
-		auto [it,exists] = this->visited_states.insert(current_state->m_hash);
+		auto [it,success] = this->visited_states.insert(current_state->m_hash);
 		
 		// Check the moves of all directions and push the states onto the vector.
 		if (auto up_state = current_state->checkMove(State::MoveDirection::UP))
 		{
+			std::cout << "UP" << std::endl;
 			std::cout << "creating up state...." << std::endl;
 			if (auto [it,success] = this->visited_states.insert(up_state->m_hash);success)
 				state_queue.push(up_state);	
 		}
 		if (auto down_state = current_state->checkMove(State::MoveDirection::DOWN))
 		{
+			std::cout << "DOWN" << std::endl;
 			std::cout << "creating down state...." << std::endl;
 			if (auto [it,success] = this->visited_states.insert(down_state->m_hash);success)
 				state_queue.push(down_state);	
 		}
 		if (auto left_state = current_state->checkMove(State::MoveDirection::LEFT))
 		{
+			std::cout << "LEFT" << std::endl;
 			std::cout << "creating left state...." << std::endl;
 			if (auto [it,success] = this->visited_states.insert(left_state->m_hash);success)
 				state_queue.push(left_state);	
 		}
 		if (auto right_state = current_state->checkMove(State::MoveDirection::RIGHT))
 		{
+			std::cout << "RIGHT" << std::endl;
 			std::cout << "creating right state...." << std::endl;
 			if (auto [it,success] = this->visited_states.insert(right_state->m_hash);success)
 				state_queue.push(right_state);	
 		}
 		// Now state vector contains all the states in a breath first search layer.
-		
+
 		// If the goal State is found as the first element of the queue, return it as success and stop.
-		if (state_queue.front()->isGoal())
+		if (current_state->isGoal())
+		{
 			return "[INFO] : Solution found.";
+		}
 		layer++;
 		
 	}
