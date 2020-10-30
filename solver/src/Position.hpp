@@ -8,7 +8,7 @@ public:
 	~Position();
 
 	Position operator+(const Position& pos);
-	Position operator+=(const Position& pos);
+	Position& operator+=(const Position& pos);
 	Position operator-(const Position& pos);
 	bool operator==(const Position& pos);
 	friend std::ostream& operator<<(std::ostream& os, const Position& pos); 

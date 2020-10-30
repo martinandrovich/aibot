@@ -29,12 +29,11 @@ bool Position::operator==(const Position& pos)
 	return (this->x == pos.x && this->y == pos.y);
 }
 
-Position Position::operator+=(const Position &pos)
+Position& Position::operator+=(const Position &pos)
 {
-	Position res;
-	res.x = this->x + pos.x;
-	res.y = this->y + pos.y;
-	return res;
+	this->x += pos.x;
+	this->y += pos.y;
+	return *this;
 }
 
 std::ostream& operator<<(std::ostream& os, const Position& pos)
