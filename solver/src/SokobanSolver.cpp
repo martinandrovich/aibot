@@ -14,7 +14,6 @@ SokobanSolver::SokobanSolver(std::string map)
 	std::string line;
 	while (std::getline(fs, line))
 	{
-		std::cout << line << std::endl;
 		this->m_orig_map.push_back(line);
 	}
 	m_clean_map = m_orig_map;
@@ -133,6 +132,7 @@ std::string SokobanSolver::solve()
 	start_state->m_clean_map = getCleanMap();
 
 	// Push start_state onto state_queue and insert hash.
+	std::cout << "Pushing start state to queue....." << std::endl;
 	state_queue.push(start_state);
 	this->visited_states.insert(start_state->m_hash);
 	
@@ -141,18 +141,12 @@ std::string SokobanSolver::solve()
 	
 	// Layer counter.
 	size_t layer = 0;
-	
-	std::cout << "| Start Parameters | " << std::endl;
-	std::cout << "start_state->getRobotStart() : {" << getRobotStart().x << "," << getRobotStart().y << "}" << std::endl;
-	
+		
 	while (not state_queue.empty())  
 	{
 		current_state = state_queue.front();
 		state_queue.pop();
-		
-		std::cout << "Layer number : " << ( (layer == 0) ? "root" : std::to_string(layer)) << std::endl;
-		std::cout << "current_state->m_robot : " << current_state->m_robot << std::endl;
-		std::cout << *current_state << std::endl;
+		std::cout << "\n" << *current_state;
 		std::cin.get();
 		
 		auto [it,success] = this->visited_states.insert(current_state->m_hash);
@@ -160,31 +154,31 @@ std::string SokobanSolver::solve()
 		// Check the moves of all directions and push the states onto the vector.
 		if (auto up_state = current_state->checkMove(State::MoveDirection::UP))
 		{
-			std::cout << "UP" << std::endl;
-			std::cout << "creating up state...." << std::endl;
-			if (auto [it,success] = this->visited_states.insert(up_state->m_hash);success)
+			if (auto [it,success] = this->visited_states.insert(up_state->m_hash);success){
+				std::cout << "Pushing up state to queue....." << std::endl;
 				state_queue.push(up_state);	
+			}
 		}
 		if (auto down_state = current_state->checkMove(State::MoveDirection::DOWN))
 		{
-			std::cout << "DOWN" << std::endl;
-			std::cout << "creating down state...." << std::endl;
-			if (auto [it,success] = this->visited_states.insert(down_state->m_hash);success)
+			if (auto [it,success] = this->visited_states.insert(down_state->m_hash);success){
+				std::cout << "Pushing down state to queue....." << std::endl;
 				state_queue.push(down_state);	
+			}
 		}
 		if (auto left_state = current_state->checkMove(State::MoveDirection::LEFT))
 		{
-			std::cout << "LEFT" << std::endl;
-			std::cout << "creating left state...." << std::endl;
-			if (auto [it,success] = this->visited_states.insert(left_state->m_hash);success)
-				state_queue.push(left_state);	
+			if (auto [it,success] = this->visited_states.insert(left_state->m_hash);success){
+				std::cout << "Pushing left state to queue....." << std::endl;
+				state_queue.push(left_state);
+			}
 		}
 		if (auto right_state = current_state->checkMove(State::MoveDirection::RIGHT))
 		{
-			std::cout << "RIGHT" << std::endl;
-			std::cout << "creating right state...." << std::endl;
-			if (auto [it,success] = this->visited_states.insert(right_state->m_hash);success)
-				state_queue.push(right_state);	
+			if (auto [it,success] = this->visited_states.insert(right_state->m_hash);success){
+				std::cout << "Pushing right state to queue....." << std::endl;
+				state_queue.push(right_state);
+			}
 		}
 		// Now state vector contains all the states in a breath first search layer.
 

@@ -1,5 +1,7 @@
 #pragma once
+#include <cstddef>
 #include <iostream>
+#include <tuple>
 #include "Position.hpp"
 
 #include "State.hpp"
@@ -15,10 +17,8 @@ State::State() {}
 State::State(Position robot, std::vector<Position> cans, State* parent, std::vector<std::string> map) 
 	: m_robot(robot), m_can(cans), m_parent(parent) 
 { 
-	std::cout << "generate hash a State...." << std::endl;
 	generateHash(); 
 	m_map = map;
-	std::cout << "Making a State...." << std::endl;
 }
 
 State::~State(){}
@@ -33,79 +33,77 @@ void State::generateHash()
 	}
 }
 
-bool State::isWallBlocking(Position desired_position)
-{	
-	// Is a wall blocking?
-	return (m_map[desired_position.y][desired_position.x] == 'X');
+bool State::isSpaceFree(Position desired_position)
+{
+	return (m_map[desired_position.y][desired_position.x] == '.' or m_map[desired_position.y][desired_position.x] == 'G'); 
 }
 
-std::optional<Position> State::isCanMoveValid(Position desired_position)
+bool State::isCanBlocking(Position desired_position)
+{
+	for (auto can : this->m_can) {
+		if (can == desired_position)
+			return true;
+	}
+	return false;
+}
+
+size_t State::isCanBlockingAndMovable(Position desired_position)
 {	
 	bool is_can_blocking  = false;
 	bool is_can_movable   = false;
-	Position d_pos = this->m_robot - desired_position;
-	Position can_above_me;
-	// Is a can blocking?
-	for (auto can : m_can) 
-	{
-		if (can == m_robot + d_pos)
-		{
-			is_can_blocking = true;
-			can_above_me    = can;
-		}
-	}	
-	// Can I move the can?
-	if (m_map[desired_position.y][desired_position.x] != 'X')
-		is_can_movable = true;
+	Position d_pos        = desired_position - this->m_robot;
+	Position desired_can_position = desired_position + d_pos;
 
-	// If I can move the can, we choose to do so.
-	if (is_can_blocking and is_can_movable)
-		return desired_position;
-	else
-		return std::nullopt;
+	// Is a can blocking?
+	size_t can_indx = 0;
+	for (;can_indx < m_can.size();can_indx++) {	
+		if (m_can[can_indx] == desired_position)
+		{
+			std::cout << "I have found a can in my way!" << std::endl;
+			is_can_blocking = true;
+			break;
+		}
+	}
+	// is no can blocking
+	if (not is_can_blocking)
+		return -1;
+	// can we move the blocking can, return index if true.
+	if (m_map[desired_can_position.y][desired_can_position.x] != 'X' and m_map[desired_can_position.y][desired_can_position.x] != 'J')
+		return can_indx;
+	return -1;
 }
 
 State* State::checkMove(Position pos)
 {
-	Position d_pos = pos - this->m_robot;
-	std::cout << "----" << std::endl;
-	std::cout << "this->m_robot : " << this->m_robot << std::endl;
-	std::cout << "d_pos : " << d_pos << std::endl;
-	std::cout << "pos : " << pos << std::endl;
-	std::cout << "----" << std::endl;
-	
 
-	// First we check if a wall is blocking.
-	bool is_wall_blocking = isWallBlocking(this->m_robot + d_pos);
-	if (is_wall_blocking)
+	// 1) if (space is free)              
+	// 2) else if (is can move valid)    
+	// 3) else nullptr
+
+	// 1) free space V
+	// 2) can is present (movable) V
+	// 3) can is present (non-movable) V
+	// 4) wall is present V
+	
+	Position d_pos = pos - this->m_robot;
+
+	// We go up.
+	if ( isSpaceFree(pos) )
+		return new State( (this->m_robot + d_pos) , this->m_can, this, this->m_map );
+	// We move the can.
+	if (auto can_indx = isCanBlockingAndMovable( this->m_robot + d_pos); can_indx != -1) 
 	{
-		std::cout << "Wall is blocking" << std::endl;
-		return nullptr;
-	}
-	// Is there a can in the way, and if so, can we move it.
-	else if (auto can_pos = isCanMoveValid( this->m_robot + d_pos)) 
-	{
-		std::cout << "I have found a can in my way!" << std::endl;
 		// The cans for the new state.
 		std::vector<Position> new_cans = this->m_can;
-		
-		// Determine the can we are moving
-		for (int i = 0; i < m_can.size(); i++) 
-		{
-			// Update the new_cans array to the new state.
-			if (this->m_can[i] + d_pos == Position(can_pos->x + d_pos.x,can_pos->y + d_pos.y) )
-			{
-				new_cans[i] += d_pos;
-			}
-		}
-		std::cout << "We push can" << std::endl;
+		new_cans[can_indx]            += d_pos;
+		std::cout << "We push can to " << new_cans[can_indx] << std::endl;
 		return new State( (this->m_robot + d_pos) , new_cans ,this , this->m_map);
 	}
-	// No can or wall was in the way, so we simply just go up.
+	// There must be either a wall or a unmovable can.
 	else
 	{
-		std::cout << "No obsticales" << std::endl;
-		return new State( (this->m_robot + d_pos) , this->m_can, this, this->m_map );
+		std::cout << "Cannot go this way..." << std::endl;
+		return nullptr; 
 	}
 }
 
@@ -114,35 +112,26 @@ State* State::checkMove(MoveDirection dir)
 	switch (dir) 
 	{
 		case MoveDirection::UP:
+			std::cout << "\nchecking up.." << std::endl;
 			return checkMove( Position(this->m_robot.x, this->m_robot.y - 1) );
 		case MoveDirection::DOWN:
+			std::cout << "\nchecking down.." << std::endl;
 			return checkMove( Position(this->m_robot.x, this->m_robot.y + 1) );
 		case MoveDirection::LEFT:
+			std::cout << "\nchecking left.." << std::endl;
 			return checkMove( Position(this->m_robot.x - 1, this->m_robot.y) );
 		case MoveDirection::RIGHT:
+			std::cout << "\nchecking right.." << std::endl;
 			return checkMove( Position(this->m_robot.x + 1, this->m_robot.y) );
 	};
 }
 
 bool State::isGoal()
 {
-	std::cout << "isGoal initiated....." << std::endl;
-	std::cout << "m_can.size() : " << m_can.size() << std::endl;
-	std::cout << "m_goal.size() : " << m_goal.size() << std::endl;
-	std::cout << "m_robot " << m_robot << std::endl;
-	std::cout << "m_hash" << m_hash << std::endl;
-
-	for (auto can : this->m_can) {
-		std::cout << "can : " << can << std::endl;
-	}
-	for (auto goal : this->m_goal) {
-		std::cout << "goal : " << goal << std::endl; 
-	}
-
+	
 	bool res = std::all_of(this->m_goal.begin(), this->m_goal.end(), [&]( const auto& g ){ 
 		return std::find( this->m_can.begin(), this->m_can.end(), g ) != this->m_can.end(); 
 	} );
-	std::cout << "res : " << res << std::endl;
 	return res;
 }
 

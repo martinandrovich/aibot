@@ -1,4 +1,5 @@
 #pragma once
+#include <cstddef>
 #include <iterator>
 #include <ostream>
 #include <string>
@@ -28,10 +29,11 @@ public:
 	State*                  right();
 
 	void                     generateHash();
-	bool                     isWallBlocking(Position desired_position);
+	bool                     isSpaceFree(Position desired_position);
 	bool                     isGoal();
+	bool                     isCanBlocking(Position desired_position);
 
-	std::optional<Position>  isCanMoveValid(Position desired_position);
+	size_t                   isCanBlockingAndMovable(Position desired_position);
 
 	inline static std::vector<std::string> m_clean_map = {};
 	inline static std::vector<std::string> m_map = {};
