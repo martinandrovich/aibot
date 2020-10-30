@@ -29,9 +29,11 @@ public:
 	State*                  right();
 
 	void                     generateHash();
-	bool                     isSpaceFree(Position desired_position);
+	std::vector<std::string> generateStateMap();
+	bool                     isWallBlocking(Position desired_position);
 	bool                     isGoal();
-	bool                     isCanBlocking(Position desired_position);
+	size_t                   isCanBlocking(Position desired_position);
+	bool                     isCanMovable(size_t can_indx);
 
 	size_t                   isCanBlockingAndMovable(Position desired_position);
 
