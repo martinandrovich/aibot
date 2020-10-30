@@ -3,6 +3,7 @@
 #include <string>
 #include <vector>
 #include<unordered_set>
+#include "Position.hpp"
 #include "State.hpp"
 
 
@@ -22,8 +23,10 @@ public:
 	std::vector<Position>    getGoalPositions();
 	std::string              getStartHash();
 	std::vector<std::string> getCleanMap();
+	std::string              getSolution(State* solution_state);
 	void                     cleanMap(std::vector<std::string>& map);
 	bool                     stateExsists(State* state);
+	std::vector<Position>    generateIllegalCanPositions();
 
 	std::string              solve();
 

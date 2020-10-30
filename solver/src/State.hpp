@@ -34,12 +34,14 @@ public:
 	bool                     isGoal();
 	size_t                   isCanBlocking(Position desired_position);
 	bool                     isCanMovable(size_t can_indx);
+	bool                     isCanDeadlocked(Position des_can_pos);
 
 	size_t                   isCanBlockingAndMovable(Position desired_position);
 
 	inline static std::vector<std::string> m_clean_map = {};
 	inline static std::vector<std::string> m_map = {};
 	inline static std::vector<Position> m_goal = {};
+	inline static std::vector<Position> m_illegal_can_pos = {};
 
 	friend std::ostream& operator<<(std::ostream& os, const State& state);
 

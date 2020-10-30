@@ -3,9 +3,8 @@
 #include <iostream>
 #include <tuple>
 #include "Position.hpp"
-
+#include "debug.h"
 #include "State.hpp"
-
 #include <optional>
 #include <string>
 #include <vector>
@@ -33,7 +32,6 @@ void State::generateHash()
 	}
 }
 
-
 bool State::isWallBlocking(Position desired_position)
 {
 	return (m_clean_map[desired_position.y][desired_position.x] == 'X'); 
@@ -51,7 +49,6 @@ size_t State::isCanBlocking(Position desired_position)
 
 bool State::isCanMovable(size_t can_indx)
 {
-
 	Position des_can_pos = this->m_can[can_indx] + (this->m_can[can_indx] - this->m_robot);
 
 	if (isWallBlocking(des_can_pos))
@@ -63,6 +60,11 @@ bool State::isCanMovable(size_t can_indx)
 	}
 
 	return true;
+}
+
+bool State::isCanDeadlocked(Position des_can_pos)
+{
+	return std::find(this->m_illegal_can_pos.begin(),this->m_illegal_can_pos.end(), des_can_pos) != this->m_illegal_can_pos.end();
 }
 
 State* State::checkMove(Position pos)
@@ -82,31 +84,33 @@ State* State::checkMove(Position pos)
 	// Is there a wall
 	if ( isWallBlocking(pos) )
 	{
-		std::cout << "A wall is blocking..." << std::endl;
+		if (PRINT_DEBUG) std::cout << "A wall is blocking..." << std::endl;
 		return nullptr; 
 	}
 
 	// We move the can.
 	if (auto can_indx = isCanBlocking( this->m_robot + d_pos); can_indx != -1) 
 	{
-		std::cout << "A can is blocking..." << std::endl;
-		if (isCanMovable(can_indx)) {	
+		if (PRINT_DEBUG) std::cout << "A can is blocking..." << std::endl;
+		if (isCanMovable(can_indx)) {
 			// The cans for the new state.
 			std::vector<Position> new_cans = this->m_can;
-			new_cans[can_indx]            += d_pos;
-			std::cout << "We push can to " << new_cans[can_indx] << std::endl;
+			new_cans[can_indx] += d_pos;
+			if (isCanDeadlocked(new_cans[can_indx]))
+				return nullptr;
+			if (PRINT_DEBUG) std::cout << "We push can to " << new_cans[can_indx] << std::endl;
 
 			return new State( (this->m_robot + d_pos) , new_cans ,this , this->m_map);
 		}
 		else
 		{
-			std::cout << "The can is not movable..." << std::endl;
+			if (PRINT_DEBUG) std::cout << "The can is not movable..." << std::endl;
 			return nullptr;
 		}
 	}
 	else
 	{
-		std::cout << "Nothing is blocking..." << std::endl;
+		if (PRINT_DEBUG) std::cout << "Nothing is blocking..." << std::endl;
 		return new State( (this->m_robot + d_pos) , this->m_can ,this , this->m_map);
 	}
 }
@@ -116,16 +120,16 @@ State* State::checkMove(MoveDirection dir)
 	switch (dir) 
 	{
 		case MoveDirection::UP:
-			std::cout << "\nchecking up.." << std::endl;
+			if (PRINT_DEBUG) std::cout << "\nchecking up.." << std::endl;
 			return checkMove( Position(this->m_robot.x, this->m_robot.y - 1) );
 		case MoveDirection::DOWN:
-			std::cout << "\nchecking down.." << std::endl;
+			if (PRINT_DEBUG) std::cout << "\nchecking down.." << std::endl;
 			return checkMove( Position(this->m_robot.x, this->m_robot.y + 1) );
 		case MoveDirection::LEFT:
-			std::cout << "\nchecking left.." << std::endl;
+			if (PRINT_DEBUG) std::cout << "\nchecking left.." << std::endl;
 			return checkMove( Position(this->m_robot.x - 1, this->m_robot.y) );
 		case MoveDirection::RIGHT:
-			std::cout << "\nchecking right.." << std::endl;
+			if (PRINT_DEBUG) std::cout << "\nchecking right.." << std::endl;
 			return checkMove( Position(this->m_robot.x + 1, this->m_robot.y) );
 	};
 }
