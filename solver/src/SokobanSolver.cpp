@@ -52,16 +52,37 @@ void SokobanSolver::cleanMap(std::vector<std::string>& map)
 std::vector<Position> SokobanSolver::generateIllegalCanPositions()
 {
 	std::vector<Position> illegal_pos;
+
+	// Position in upper corners 
+	//
+	// XXXXX  |  XXXXX
+	// XO     |     OX
+	// X      |      X
+	//
+	// Position in lower corners
+	//
+	// X      |      X
+	// XO     |     OX
+	// XXXXX  |  XXXXX
+	//
+	
+	bool upper_corner_illegal = false;
+	bool lower_corner_illegal = false;
+
+	// Search for each location in a corner.
 	for (int y = 0; y < this->m_clean_map.size(); y++) {
 		for (int x = 0; x < this->m_clean_map[y].length(); x++) {
-			if (this->m_clean_map[y][x] != '.')
-				continue;
-			// Upper corners
-			if (this->m_clean_map[y - 1][x] == 'X' && ( this->m_clean_map[y][x + 1] == 'X' || this->m_clean_map[y][x - 1] == 'X' ) )
-				illegal_pos.push_back(Position(x,y));
-			// Lower corners
-			if (this->m_clean_map[y + 1][x] == 'X' && ( this->m_clean_map[y][x + 1] == 'X' || this->m_clean_map[y][x - 1] == 'X' ) )
-				illegal_pos.push_back(Position(x,y));
+			if (this->m_clean_map[y][x] == '.' || this->m_orig_map[y][x] == 'G')
+			{
+				upper_corner_illegal = this->m_orig_map[y - 1][x] == 'X' && ( this->m_orig_map[y][x + 1] == 'X' || this->m_orig_map[y][x - 1] == 'X' );
+				lower_corner_illegal = this->m_orig_map[y + 1][x] == 'X' && ( this->m_orig_map[y][x + 1] == 'X' || this->m_orig_map[y][x - 1] == 'X' );
+				// Upper corners
+				if (upper_corner_illegal && this->m_orig_map[y][x] != 'G')
+					illegal_pos.push_back(Position(x,y));
+				// Lower corners
+				if (lower_corner_illegal && this->m_orig_map[y][x] != 'G')
+					illegal_pos.push_back(Position(x,y));
+			}
 		}
 	}
 	return illegal_pos;
@@ -154,10 +175,6 @@ std::string SokobanSolver::solve()
 	start_state->m_clean_map = getCleanMap();
 	start_state->m_illegal_can_pos = generateIllegalCanPositions();
 	
-	for (auto ill : start_state->m_illegal_can_pos) {
-		std::cout << "Illegal can pos..." << ill << std::endl;
-	}
-
 	// Push start_state onto state_queue and insert hash.
 	if (PRINT_DEBUG) std::cout << "Pushing start state to queue....." << std::endl;
 	state_queue.push(start_state);
@@ -175,7 +192,7 @@ std::string SokobanSolver::solve()
 		current_state = state_queue.front();
 		state_queue.pop();
 		if (PRINT_DEBUG) std::cout << "\n" << *current_state;
-		
+
 		// Are we done!
 		if (current_state->isGoal())
 			return getSolution(current_state);
@@ -185,6 +202,7 @@ std::string SokobanSolver::solve()
 		{
 			if (auto [it,success] = this->visited_states.insert(up_state->m_hash);success){
 				if (PRINT_DEBUG) std::cout << "Pushing up state to queue....." << std::endl;
+				if (PRINT_DEBUG) std::cout << "up state hash....." << up_state->m_hash << std::endl;
 				state_queue.push(up_state);	
 			}
 		}
@@ -192,6 +210,7 @@ std::string SokobanSolver::solve()
 		{
 			if (auto [it,success] = this->visited_states.insert(down_state->m_hash);success){
 				if (PRINT_DEBUG) std::cout << "Pushing down state to queue....." << std::endl;
+				if (PRINT_DEBUG) std::cout << "down state hash....." << down_state->m_hash << std::endl;
 				state_queue.push(down_state);	
 			}
 		}
@@ -199,6 +218,7 @@ std::string SokobanSolver::solve()
 		{
 			if (auto [it,success] = this->visited_states.insert(left_state->m_hash);success){
 				if (PRINT_DEBUG) std::cout << "Pushing left state to queue....." << std::endl;
+				if (PRINT_DEBUG) std::cout << "left state hash....." << left_state->m_hash << std::endl;
 				state_queue.push(left_state);
 			}
 		}
@@ -206,9 +226,13 @@ std::string SokobanSolver::solve()
 		{
 			if (auto [it,success] = this->visited_states.insert(right_state->m_hash);success){
 				if (PRINT_DEBUG) std::cout << "Pushing right state to queue....." << std::endl;
+				if (PRINT_DEBUG) std::cout << "right state hash....." << right_state->m_hash << std::endl;
 				state_queue.push(right_state);
 			}
 		}
+		
+		if (PRINT_DEBUG) std::cout << "Current has : " << current_state->m_hash << std::endl;
+
 		layer++;
 	}
 	return "[ERROR] : No solution was found.";

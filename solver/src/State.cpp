@@ -51,8 +51,16 @@ bool State::isCanMovable(size_t can_indx)
 {
 	Position des_can_pos = this->m_can[can_indx] + (this->m_can[can_indx] - this->m_robot);
 
+	if (PRINT_DEBUG) std::cout << "Desired can position, in isCanMoveable() : " << des_can_pos << std::endl;
+
 	if (isWallBlocking(des_can_pos))
 		return false;
+	
+	// Is there a goal on the other side?
+	for (auto goal : m_goal) {
+		if (goal == des_can_pos)
+			return true;
+	}
 
 	for (auto can : this->m_can) {
 		if (can == des_can_pos)
