@@ -1,0 +1,10 @@
+optimizations:
+
+- release mode
+- proper timing
+- constexpr if
+- const auto& arguments
+- better constructors
+- ternary on solution string
+- rename static members to s_member; initialize only once
+- SokobanSolver is friend of State -> private members
