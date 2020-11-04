@@ -187,12 +187,16 @@ std::string SokobanSolver::solve()
 	// Current state.
 	State* current_state = start_state;
 		
-	while (not state_queue.empty())  
+	while (not state_queue.empty()) 
 	{
 		if constexpr (PRINT_DEBUG) std::cin.ignore();
 		current_state = state_queue.front();
 		state_queue.pop();
 		if constexpr (PRINT_DEBUG) std::cout << "\n" << *current_state;
+
+		// Are we done?
+		if (current_state->isGoal())
+			return getSolution(current_state);
 
 		// Check the moves of all directions and push the states onto the vector.
 		if (const auto& up_state = current_state->checkMove(State::MoveDirection::UP))
@@ -231,10 +235,6 @@ std::string SokobanSolver::solve()
 				state_queue.push(right_state);
 			}
 		}
-
-		// Are we done!
-		if (current_state->isGoal())
-			return getSolution(current_state);
 		
 		if constexpr (PRINT_DEBUG) std::cout << "Current has : " << current_state->m_hash << std::endl;
 	}

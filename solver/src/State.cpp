@@ -18,7 +18,7 @@ State::State(const Position& robot, const std::vector<Position>& cans, State* pa
 
 State::~State() {}
 
-void State::generateHash()
+inline void State::generateHash()
 {
 	// static std::string rob_pos;
 	// rob_pos = std::to_string(m_robot.x) + std::to_string(m_robot.y);
@@ -30,12 +30,12 @@ void State::generateHash()
 	}
 }
 
-bool State::isWallBlocking(const Position& desired_position)
+inline bool State::isWallBlocking(const Position& desired_position)
 {
 	return (s_clean_map[desired_position.y][desired_position.x] == 'X');
 }
 
-int State::isCanBlocking(const Position& desired_position)
+inline int State::isCanBlocking(const Position& desired_position)
 {
 	static int can_idx;
 	for (can_idx = 0; can_idx < this->m_can.size(); ++can_idx)
@@ -47,7 +47,7 @@ int State::isCanBlocking(const Position& desired_position)
 	return -1;
 }
 
-bool State::isCanMovable(size_t can_indx)
+inline bool State::isCanMovable(size_t can_indx)
 {
 	static Position des_can_pos;
 	des_can_pos = this->m_can[can_indx] + (this->m_can[can_indx] - this->m_robot);
@@ -73,12 +73,12 @@ bool State::isCanMovable(size_t can_indx)
 	return true;
 }
 
-bool State::isCanDeadlocked(const Position& des_can_pos)
+inline bool State::isCanDeadlocked(const Position& des_can_pos)
 {
 	return std::find(this->s_illegal_can_pos.begin(),this->s_illegal_can_pos.end(), des_can_pos) != this->s_illegal_can_pos.end();
 }
 
-State* State::checkMove(const Position& desired_position)
+inline State* State::checkMove(const Position& desired_position)
 {
 	static Position d_pos;
 	d_pos = desired_position - this->m_robot;

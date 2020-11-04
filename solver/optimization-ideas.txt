@@ -17,3 +17,4 @@
 ✓ isGoal()
 ✓ direct return (overloads)
 ✓ static variables
+✓ inline methods
