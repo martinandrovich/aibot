@@ -8,3 +8,5 @@ optimizations:
 - ternary on solution string
 - rename static members to s_member; initialize only once
 - SokobanSolver is friend of State -> private members
+- remove layer counter
+- ++i
