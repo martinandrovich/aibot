@@ -5,30 +5,32 @@ Position::Position() {}
 Position::Position(int x, int y) 
 	: x(x) , y(y) {}
 
-Position::~Position() { }
+Position::~Position() {}
 
-Position Position::operator+(const Position& pos)
+Position operator+ (const Position& rhs, const Position& lhs)
 {
-	Position res;
-	res.x = this->x + pos.x;
-	res.y = this->y + pos.y;
-	return res;
+	// Position res;
+	// res.x = rhs.x + lhs.x;
+	// res.y = rhs.y + lhs.y;
+	// return res;
+	return { rhs.x + lhs.x, rhs.y + lhs.y };
 }
 
-Position Position::operator-(const Position& pos)
+Position operator- (const Position& rhs, const Position& lhs)
 {
-	Position res;
-	res.x = this->x - pos.x;
-	res.y = this->y - pos.y;
-	return res;
+	// Position res;
+	// res.x = rhs.x - lhs.x;
+	// res.y = rhs.y - lhs.y;
+	// return res;
+	return { rhs.x - lhs.x, rhs.y - lhs.y };
 }
 
-bool Position::operator==(const Position& pos)
+bool operator== (const Position& rhs, const Position& lhs)
 {
-	return (this->x == pos.x && this->y == pos.y);
+	return (rhs.x == lhs.x && rhs.y == lhs.y);
 }
 
-Position& Position::operator+=(const Position &pos)
+Position& Position::operator+= (const Position &pos)
 {
 	this->x += pos.x;
 	this->y += pos.y;

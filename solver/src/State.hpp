@@ -15,40 +15,32 @@
 class State
 {
 public:
+
 	enum class MoveDirection{ UP, DOWN, LEFT, RIGHT };
 
-	State();
-	State(Position robot, std::vector<Position> cans, State* parent,std::vector<std::string> map);
+	State(const Position& robot, const std::vector<Position>& cans, State* parent = nullptr);
 	~State();
 
-	State*                  checkMove(Position desired_position);
-	State*                  checkMove(MoveDirection dir);
-	State*                  up();
-	State*                  down();
-	State*                  left();
-	State*                  right();
+	State*                   checkMove(const Position& desired_position);
+	State*                   checkMove(MoveDirection dir);
 
 	void                     generateHash();
-	std::vector<std::string> generateStateMap();
-	bool                     isWallBlocking(Position desired_position);
+	bool                     isWallBlocking(const Position& desired_position);
 	bool                     isGoal();
-	size_t                   isCanBlocking(Position desired_position);
+	int                      isCanBlocking(const Position& desired_position);
 	bool                     isCanMovable(size_t can_indx);
-	bool                     isCanDeadlocked(Position des_can_pos);
+	bool                     isCanDeadlocked(const Position& des_can_pos);
 
-	size_t                   isCanBlockingAndMovable(Position desired_position);
+	inline static std::vector<std::string> s_clean_map;
+	inline static std::vector<std::string> s_map;
+	inline static std::vector<Position>    s_goals;
+	inline static std::vector<Position>    s_illegal_can_pos;
 
-	inline static std::vector<std::string> m_clean_map = {};
-	inline static std::vector<std::string> m_map = {};
-	inline static std::vector<Position> m_goal = {};
-	inline static std::vector<Position> m_illegal_can_pos = {};
-
-	friend std::ostream& operator<<(std::ostream& os, const State& state);
+	friend std::ostream& operator<< (std::ostream& os, const State& state);
 
 	std::vector<Position>    m_can;
 	Position                 m_robot;
 	std::string              m_hash = "";
 	State*                   m_parent = nullptr;
-private:
-	bool                     isValid();
+
 };

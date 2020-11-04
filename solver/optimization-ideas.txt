@@ -1,12 +1,19 @@
-optimizations:
+# edits
 
-- release mode
-- proper timing
-- constexpr if
-- const auto& arguments
-- better constructors
-- ternary on solution string
-- rename static members to s_member; initialize only once
+✓ proper timing
+✓ ternary on solution string
+✓ rename static members to s_member
 - SokobanSolver is friend of State -> private members
-- remove layer counter
-- ++i
+
+# optimizations:
+
+✓ release mode
+✓ constexpr if
+✓ remove layer counter
+✓ const auto& for-range
+✓ const T& args
+✓ ++i
+✓ better constructors / init static only once
+✓ isGoal()
+✓ direct return (overloads)
+✓ static variables
