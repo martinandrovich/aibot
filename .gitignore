@@ -2,6 +2,11 @@
 build/
 CMakeFiles/
 
+# Python
+
+__pycache__/
+*.py[cod]
+
 # VSCode folders
 .vscode/
 
