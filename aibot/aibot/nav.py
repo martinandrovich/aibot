@@ -3,22 +3,11 @@
 from aibot import hw
 from time import sleep
 
-DIST_FOLLOW_LINE = 500
-DIST_FOLLOW_GYRO = 80
-
-is_cal = False
+from aibot.constants import *
 
 def forward(speed = 30):
 
-	# calibrate the gyroscope
-	hw.motors.wait_until_not_moving()
-	
-	global is_cal
-	if not is_cal:
-		print("calibrating...")
-		hw.gs.calibrate()
-		is_cal = True
-
+	# reset the gyroscope
 	hw.gs.reset()
 
 	# drive forward with the color sensor
@@ -28,12 +17,24 @@ def forward(speed = 30):
 	hw.motors.follow_gyro_for(DIST_FOLLOW_GYRO, 0, speed)
 	
 	# align with the gyroscope
-	hw.motors.turn_degrees(hw.SpeedPercent(5), -hw.gs.angle)
+	hw.motors.turn_degrees(hw.SpeedPercent(SPEED_TURN), -hw.gs.angle)
 
 def turn(dir):
 
 	angle = 90 * (-1 if dir == "left" else 1)
-	hw.motors.turn_degrees(hw.SpeedPercent(5), angle)
+	hw.motors.turn_degrees(hw.SpeedPercent(SPEED_TURN), angle)
+
+def drive(sequence):
+	
+	for cmd in sequence:
+
+		action = {
+			'f': lambda: turn("left"),
+			'p': lambda: turn("right"),
+			'w': lambda: forward()
+			'l': lambda: forward()
+			'r': lambda: forward()
+			}[cmd]()
 
 def drive_square(speed = 30):
 
