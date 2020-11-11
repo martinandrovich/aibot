@@ -2,6 +2,7 @@
 #include <iostream>
 #include <cstddef>
 #include <fstream>
+#include <ostream>
 #include <queue>
 #include <string>
 #include <vector>
@@ -14,6 +15,7 @@ SokobanSolver::SokobanSolver() {}
 
 SokobanSolver::SokobanSolver(std::string map)
 {
+	this->m_map_name = map;
 	std::fstream fs(map);
 	std::string line;
 	while (std::getline(fs, line))
@@ -266,5 +268,19 @@ std::string SokobanSolver::getSolution(State* solution_state)
 	}
 	// Return the reversed solution string.
 	std::reverse(solution.begin(),solution.end());
+	
+	std::ofstream output_file;
+
+
+	for (int i = 0; i < this->m_map_name.length(); i++) {
+		if (this->m_map_name[i] == '/')
+			this->m_map_name = this->m_map_name.substr(i + 1,this->m_map_name.length());
+	}
+	std::cout << "writing " << solution << " to " << this->m_map_name << std::endl;
+
+	output_file.open("solutions/" + this->m_map_name);
+	output_file << solution;
+	output_file.close();
+
 	return solution;
 }

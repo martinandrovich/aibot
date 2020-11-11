@@ -35,4 +35,5 @@ protected:
 	std::vector<std::string> m_orig_map; /*!< Member description */
 	std::vector<std::string> m_clean_map;
 	std::unordered_set<std::string> visited_states;
+	std::string m_map_name;
 };
