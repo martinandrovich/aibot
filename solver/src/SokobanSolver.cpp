@@ -1,10 +1,12 @@
 #include <algorithm>
+#include <cctype>
 #include <iostream>
 #include <cstddef>
 #include <fstream>
 #include <ostream>
 #include <queue>
 #include <string>
+#include <unordered_map>
 #include <vector>
 
 #include "debug.h"
@@ -256,31 +258,103 @@ std::string SokobanSolver::getSolution(State* solution_state)
 		d_pos = state->m_robot - state->m_parent->m_robot;
 		
 		if (d_pos.x == 0  && d_pos.y == -1)
-			solution += "u";
+		{
+			// Have we pushed a can?
+			if (state->m_can != state->m_parent->m_can)
+				solution += "U";
+			else
+				solution += "u";
+		}
 		else if (d_pos.x == 0  && d_pos.y == +1)
-			solution += "d";
+		{
+			if (state->m_can != state->m_parent->m_can)
+				solution += "D";
+			else
+				solution += "d";
+		}
 		else if (d_pos.x == -1  && d_pos.y == 0)
-			solution += "l";
+		{
+			if (state->m_can != state->m_parent->m_can)
+				solution += "L";
+			else
+				solution += "l";
+		}
 		else if (d_pos.x == +1  && d_pos.y == 0)
-			solution += "r";
+		{
+			if (state->m_can != state->m_parent->m_can)
+				solution += "R";
+			else
+				solution += "r";
+		}
 		else
+		{
 			return "[ERROR] : d_pos non valid size...";
+		}
 	}
 	// Return the reversed solution string.
 	std::reverse(solution.begin(),solution.end());
 	
-	std::ofstream output_file;
 
 
 	for (int i = 0; i < this->m_map_name.length(); i++) {
 		if (this->m_map_name[i] == '/')
 			this->m_map_name = this->m_map_name.substr(i + 1,this->m_map_name.length());
 	}
-	std::cout << "writing " << solution << " to " << this->m_map_name << std::endl;
 
+	std::cout << "solution 1 : " << solution << std::endl;
+
+	solution = cvtAbs2RelActions(solution);
+
+	std::cout << "solution 2 : " << solution << std::endl;
+
+	std::ofstream output_file;
 	output_file.open("solutions/" + this->m_map_name);
 	output_file << solution;
 	output_file.close();
 
 	return solution;
 }
+
+std::string SokobanSolver::cvtAbs2RelActions(std::string solution)
+{
+	
+	solution = "u" + solution;
+	
+	std::string result = "";
+
+	for (size_t i = 0; i < solution.length() - 1; ++i) 
+	{
+
+		const std::string pair = {solution[i],solution[i + 1]};
+		const std::string pair_lc = {char(std::tolower(pair[0])),char(std::tolower(pair[1]))};
+
+		// orientation correction
+		{
+			static std::unordered_map<std::string,std::string> lut = 
+			{
+				{"lr","u"},
+				{"lu","r"},
+				{"ld","r"},
+				{"rl","u"},
+				{"ru","l"},
+				{"rd","r"},
+				{"ul","l"},
+				{"ur","r"},
+				{"ud","u"},
+				{"dl","r"},	
+				{"dr","l"},
+				{"du","u"}
+			};
+
+			if (pair_lc[0] != pair_lc[1])
+				result += lut[pair_lc];
+		}
+		// translation correction
+		{
+			result += (std::isupper(pair[1])) ? "pb" : "f";
+		}
+	}
+
+	return result;
+}
+

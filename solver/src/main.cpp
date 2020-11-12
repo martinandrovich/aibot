@@ -1,7 +1,10 @@
+
+#include <algorithm>
+#include <fstream>
 #include <iostream>
 #include <string>
 #include <chrono>
-
+#include <cctype>
 #include "SokobanSolver.hpp"
 #include "Position.hpp"
 
@@ -26,12 +29,18 @@ int main(int argc, char *argv[])
 
 	double time_elapsed = 0.;
 	const auto time_start = std::chrono::steady_clock::now();
-	const auto sol = sbs.solve();
+	auto sol = sbs.solve();
 	time_elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now() - time_start).count();
 	
-	// print solution
+	// Convert to solution string to all lower case
+	std::transform(sol.begin(), sol.end(), sol.begin(),
+    [](unsigned char c){ return std::tolower(c); });
+
+	std::string sol_lc = "lllluddllurrrrrdruudlluluulldrurddulldrdrrrdruudlllluurdldrrrdrulllldllurrrrrdruuruulldrlrurd";
+
 	std::cout << "Execution took: " << time_elapsed << " ms" << std::endl;
-	std::cout << "Solution: " << ((sol == "") ? "Not found." : sol) << std::endl;
+	//std::cout << "Solution: " << ((sol == "") ? "Not found." : sol) << std::endl;
+	//std::cout << "Solution is " << (sol_lc == sol) << std::endl;
 
 	return 0;
 }

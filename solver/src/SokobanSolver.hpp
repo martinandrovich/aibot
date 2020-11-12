@@ -2,6 +2,7 @@
 #include <fstream>
 #include <string>
 #include <vector>
+#include <unordered_map>
 #include<unordered_set>
 #include "Position.hpp"
 #include "State.hpp"
@@ -28,6 +29,8 @@ public:
 	bool                     stateExsists(State* state);
 	std::vector<Position>    generateIllegalCanPositions();
 
+	std::string              cvtAbs2RelActions(std::string solution);
+
 	std::string              solve();
 
 
@@ -36,4 +39,11 @@ protected:
 	std::vector<std::string> m_clean_map;
 	std::unordered_set<std::string> visited_states;
 	std::string m_map_name;
+	// 
+	// forward  : f = ↑
+	// uturn    : u = ⟲
+	// turn cw  : r = ↻
+	// turn ccw : l = ↺
+	// push     : p = [404]
+	//
 };
