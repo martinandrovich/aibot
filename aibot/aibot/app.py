@@ -3,7 +3,6 @@
 from time import sleep
 
 from aibot import hw
-from aibot import utils
 from aibot import nav
 
 def init():
@@ -24,9 +23,17 @@ def init():
 
 def run():
 
-	while True:
-		utils.print_all()
-		sleep(0.25)
+	# filename = input("Path to file: ")
+	filename = "solutions/map1.txt"
+
+	file = open(filename)
+	seq = file.read().replace("\n", " ")
+	file.close()
+
+	print("executing: ", seq)
+	sleep(1)
+
+	nav.drive(seq)
 
 def exit():
 

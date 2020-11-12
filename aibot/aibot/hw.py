@@ -62,8 +62,6 @@ def follow_until_intersection(self, min_dist, pos_start, th_black):
 	
 	# callback function, in order to know when to stop line following
 
-	# pos_l = self.left_motor.position  - pos_start["left"]
-	# pos_r = self.right_motor.position - pos_start["right"]
 	pos_l = abs(self.left_motor.position  - pos_start["left"])
 	pos_r = abs(self.right_motor.position - pos_start["right"])
 	pos_avg   = (pos_l + pos_r) / 2
@@ -152,7 +150,8 @@ def follow_gyro_for(self, dist, speed, angle = 0):
 	# follow the line with the gyro scope
 
 	pos_start = { "left": motors.left_motor.position, "right": motors.right_motor.position }
-	
+	# print(pos_start)
+
 	self.follow_gyro_angle(
 		kp           = FOLLOW_GYRO_P,
 		ki           = FOLLOW_GYRO_I,
@@ -164,6 +163,10 @@ def follow_gyro_for(self, dist, speed, angle = 0):
 		dist         = dist,
 		pos_start    = pos_start
 	)
+
+	# pos_end = { "left": self.left_motor.position, "right": self.right_motor.position }
+	# print(pos_end)
+
 
 # append extensions
 MoveTank.reset = reset
