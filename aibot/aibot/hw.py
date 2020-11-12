@@ -51,8 +51,8 @@ def follow_for_dist(self, dist, pos_start):
 	
 	# callback function, in order to know when to stop line following
 
-	pos_l = self.left_motor.position  - pos_start["left"]
-	pos_r = self.right_motor.position - pos_start["right"]
+	pos_l = abs(self.left_motor.position  - pos_start["left"])
+	pos_r = abs(self.right_motor.position - pos_start["right"])
 	avg   = (pos_l + pos_r) / 2
 
 	return (avg <= dist)
@@ -62,8 +62,10 @@ def follow_until_intersection(self, min_dist, pos_start, th_black):
 	
 	# callback function, in order to know when to stop line following
 
-	pos_l = self.left_motor.position  - pos_start["left"]
-	pos_r = self.right_motor.position - pos_start["right"]
+	# pos_l = self.left_motor.position  - pos_start["left"]
+	# pos_r = self.right_motor.position - pos_start["right"]
+	pos_l = abs(self.left_motor.position  - pos_start["left"])
+	pos_r = abs(self.right_motor.position - pos_start["right"])
 	pos_avg   = (pos_l + pos_r) / 2
 
 	cs_l = self.cs_l.reflected_light_intensity

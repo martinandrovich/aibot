@@ -3,6 +3,8 @@
 from aibot import hw
 from time import sleep
 
+from ev3dev2.sound import Sound
+
 from aibot.constants import *
 
 def forward():
@@ -26,13 +28,11 @@ def back():
 	# reset the gyroscope
 	hw.gs.reset()
 
-	# drive forward with the gyroscope at 0 rad
-	# drive backwards for push can distance
+	# drive backwards for push can distance with the gyroscope at 0 rad
 	hw.motors.follow_gyro_for(DIST_PUSH_CAN, -SPEED_FWD, 0)
 
 	# align with the gyroscope
 	hw.motors.turn_degrees(hw.SpeedPercent(SPEED_TURN), -hw.gs.angle)
-
 
 def turn(dir):
 
@@ -41,6 +41,9 @@ def turn(dir):
 
 def push():
 
+	# forward once
+	forward()
+	
 	# reset the gyroscope
 	hw.gs.reset()
 
@@ -48,7 +51,7 @@ def push():
 	hw.motors.follow_line_for_dist(DIST_PUSH_CAN, SPEED_FWD)
 
 	# reverse using the gyroscope at 0 rad for X ticks
-	hw.motors.follow_gyro_for(DIST_PUSH_CAN_REV, -SPEED_FWD, 0)
+	hw.motors.follow_gyro_for(-DIST_PUSH_CAN, -SPEED_FWD, 0)
 
 	# align with the gyroscope
 	hw.motors.turn_degrees(hw.SpeedPercent(SPEED_TURN), -hw.gs.angle)
@@ -56,21 +59,23 @@ def push():
 
 def uturn():
 
-	print("u turn bby")
-
 	# turn around
 	turn("left")
 	turn("left")
 
+	# drive forward until intersection
 	forward()
-
 
 def drive(sequence):
 	
 	for cmd in sequence:
 
+		Sound.speak(str(cmd))
+		print(cmd)
+
 		action = {
 			'f': lambda: forward(),
+			'b': lambda: back(),
 			'u': lambda: uturn(),
 			'p': lambda: push(),
 			'l': lambda: turn("left"),
@@ -84,4 +89,3 @@ def drive_square(speed = 30):
 		sleep(1)
 		turn("right")
 		sleep(1)
-
