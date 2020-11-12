@@ -58,7 +58,7 @@ def follow_for_dist(self, dist, pos_start):
 	return (avg <= dist)
 
 # MoveSteering.follow_until_intersection()
-def follow_until_intersection(self, min_dist, pos_start, th_black = FOLLOW_LINE_DUAL_TH_BLACK):
+def follow_until_intersection(self, min_dist, pos_start, th_black):
 	
 	# callback function, in order to know when to stop line following
 
@@ -105,8 +105,28 @@ def follow_line_dual(self, kp, ki, kd, speed, sleep_time, follow_for, **kwargs):
 
 	self.stop()
 
-# MoveSteering.follow_line_for()
-def follow_line_for(self, dist, speed = SPEED_DEFAULT):
+# MoveSteering.follow_line_until_intersection()
+def follow_line_until_intersection(self, min_dist, speed):
+
+	# follow the line for a  specified speed stopping at an
+	# intersection after a minimum distance; use dual color sensor
+
+	pos_start = { "left": self.left_motor.position, "right": self.right_motor.position }
+
+	self.follow_line_dual(
+		kp           = FOLLOW_LINE_DUAL_P,
+		ki           = FOLLOW_LINE_DUAL_I,
+		kd           = FOLLOW_LINE_DUAL_D,
+		speed        = SpeedPercent(speed),
+		sleep_time   = None,
+		follow_for   = follow_until_intersection,
+		min_dist     = min_dist,
+		pos_start    = pos_start,
+		th_black     = FOLLOW_LINE_DUAL_TH_BLACK
+	)
+
+# MoveSteering.follow_line_for_dist()
+def follow_line_for_dist(self, dist, speed):
 
 	# follow the line for a specified distance at a specified speed
 	# using dual color sensor
@@ -119,24 +139,19 @@ def follow_line_for(self, dist, speed = SPEED_DEFAULT):
 		kd           = FOLLOW_LINE_DUAL_D,
 		speed        = SpeedPercent(speed),
 		sleep_time   = None,
-		follow_for   = follow_until_intersection,
-		# follow_for   = follow_for_dist,
-		min_dist     = dist,
-		pos_start    = pos_start,
-		th_black     = FOLLOW_LINE_DUAL_TH_BLACK
+		follow_for   = follow_for_dist,
+		dist         = dist,
+		pos_start    = pos_start
 	)
 
-	# stop motors
-	# self.stop()
-
 # MoveSteering.follow_gyro_for()
-def follow_gyro_for(self, dist, angle = 0, speed = SPEED_DEFAULT):
+def follow_gyro_for(self, dist, speed, angle = 0):
 	
 	# follow the line with the gyro scope
 
 	pos_start = { "left": motors.left_motor.position, "right": motors.right_motor.position }
 	
-	motors.follow_gyro_angle(
+	self.follow_gyro_angle(
 		kp           = FOLLOW_GYRO_P,
 		ki           = FOLLOW_GYRO_I,
 		kd           = FOLLOW_GYRO_D,
@@ -148,11 +163,9 @@ def follow_gyro_for(self, dist, angle = 0, speed = SPEED_DEFAULT):
 		pos_start    = pos_start
 	)
 
-	# stop motors
-	# self.stop()
-
 # append extensions
 MoveTank.reset = reset
-MoveTank.follow_line_for = follow_line_for
-MoveTank.follow_gyro_for = follow_gyro_for
 MoveTank.follow_line_dual = follow_line_dual
+MoveTank.follow_line_until_intersection = follow_line_until_intersection
+MoveTank.follow_line_for_dist = follow_line_for_dist
+MoveTank.follow_gyro_for = follow_gyro_for

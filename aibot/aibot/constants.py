@@ -1,10 +1,12 @@
 # navigation constants
 
-DIST_FOLLOW_LINE          = 500 # ticks
+DIST_FOLLOW_LINE_MIN      = 500 # ticks
 DIST_FOLLOW_GYRO          = 80  # ticks
+DIST_PUSH_CAN             = 500 # ticks
+DIST_PUSH_CAN_REV         = 200 # ticks
 
 SPEED_TURN                =  5 # percent
-SPEED_DEFAULT             = 30 # percent
+SPEED_FWD                 = 30 # percent
 
 # hw constants
 
