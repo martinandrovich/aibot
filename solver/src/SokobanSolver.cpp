@@ -334,7 +334,7 @@ std::string SokobanSolver::cvtAbs2RelActions(std::string solution)
 			{
 				{"lr","u"},
 				{"lu","r"},
-				{"ld","r"},
+				{"ld","l"},
 				{"rl","u"},
 				{"ru","l"},
 				{"rd","r"},
