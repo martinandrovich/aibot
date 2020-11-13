@@ -10,9 +10,9 @@ public:
 	Position& operator+= (const Position& pos);
 
 	friend std::ostream& operator<< (std::ostream& os, const Position& pos); 
-	friend Position operator+ (const Position& rhs, const Position& lhs);
-	friend Position operator- (const Position& rhs, const Position& lhs);
-	friend bool operator== (const Position& rhs, const Position& lhs);
+	friend Position operator+ (const Position& lhs, const Position& rhs);
+ 	friend Position operator- (const Position& lhs, const Position& rhs);
+	friend bool operator== (const Position& lhs, const Position& rhs);
 
 	int x = 0;
 	int y = 0;

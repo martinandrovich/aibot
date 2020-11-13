@@ -26,3 +26,6 @@
 - consecutive forwards
 - back() , until intersection
 - acceleration curve decrease
+- tune pid/constants
+- wider gripper
+- wider gripper

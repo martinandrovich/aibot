@@ -75,6 +75,7 @@ inline bool State::isCanMovable(size_t can_indx)
 
 inline bool State::isCanDeadlocked(const Position& des_can_pos)
 {
+	return false;
 	return std::find(this->s_illegal_can_pos.begin(),this->s_illegal_can_pos.end(), des_can_pos) != this->s_illegal_can_pos.end();
 }
 

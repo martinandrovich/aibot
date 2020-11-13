@@ -29,6 +29,7 @@ int main(int argc, char *argv[])
 
 	double time_elapsed = 0.;
 	const auto time_start = std::chrono::steady_clock::now();
+	std::cout << Position(4,2) - Position(3,1) << std::endl;
 	auto sol = sbs.solve();
 	time_elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now() - time_start).count();
 	
