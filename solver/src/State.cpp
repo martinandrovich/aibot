@@ -57,6 +57,12 @@ inline bool State::isCanMovable(size_t can_indx)
 	if (isWallBlocking(des_can_pos))
 		return false;
 
+	for (const auto& can : this->m_can)
+	{
+		if (can == des_can_pos)
+			return false;
+	}
+
 	// Is there a goal on the other side?
 	for (const auto& goal : s_goals)
 	{
@@ -64,18 +70,12 @@ inline bool State::isCanMovable(size_t can_indx)
 			return true;
 	}
 
-	for (const auto& can : this->m_can)
-	{
-		if (can == des_can_pos)
-			return false;
-	}
 
 	return true;
 }
 
 inline bool State::isCanDeadlocked(const Position& des_can_pos)
 {
-	return false;
 	return std::find(this->s_illegal_can_pos.begin(),this->s_illegal_can_pos.end(), des_can_pos) != this->s_illegal_can_pos.end();
 }
 
