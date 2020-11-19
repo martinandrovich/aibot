@@ -22,10 +22,10 @@
 # robot optimizations and todos
 
 - change CoG to improve traction
-- push(n) and forward(n) for consectuive forward movements -> "..fff.." to "..f3.."
-- replace uturn() with turn("around")
-- back() uses follow_until_intersection
-- test code (square test, push test) -> mocap trajectory tracking (?)
+✓ push(n) and forward(n) for consectuive forward movements -> "..fff.." to "..f3.."
+✓ replace uturn() with turn("around")
+✓ back() uses follow_until_intersection
+✓ test code (square test, push test) -> mocap trajectory tracking (?)
 - tune constants (pid, dist etc.)
 - wider gripper (?)
 - set acceleration curve with ramp_up_sp (?)
