@@ -19,13 +19,13 @@
 ✓ static variables
 ✓ inline methods
 
+# robot optimizations and todos
 
-# Robot optimizations
-- pushing can, does not need to cause reverse when RR or likewise for the other cases.
-- weight balance
-- consecutive forwards
-- back() , until intersection
-- acceleration curve decrease
-- tune pid/constants
-- wider gripper
-- wider gripper
+- change CoG to improve traction
+- push(n) and forward(n) for consectuive forward movements -> "..fff.." to "..f3.."
+- replace uturn() with turn("around")
+- back() uses follow_until_intersection
+- test code (square test, push test) -> mocap trajectory tracking (?)
+- tune constants (pid, dist etc.)
+- wider gripper (?)
+- set acceleration curve with ramp_up_sp (?)
