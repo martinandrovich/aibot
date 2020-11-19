@@ -1,6 +1,7 @@
 # navigation constants
 
 DIST_FOLLOW_LINE_MIN      = 100 # ticks
+DIST_BETWEEN_INTERSECTION = 600 # ticks
 DIST_FOLLOW_GYRO          = 80  # ticks
 DIST_PUSH_CAN             = 480 # ticks
 
