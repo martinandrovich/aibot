@@ -247,6 +247,76 @@ std::string SokobanSolver::solve()
 	return "";
 }
 
+std::string
+compress_string(std::string str)
+{
+	std::string str_new = "";
+	size_t counter = 0;
+
+	// remove all f's
+	for (size_t i = 0; i < str.length(); ++i)
+	{
+		if (!counter && str[i] == 'f')
+		{
+			counter = 1;
+		}
+		else
+		if (counter && str[i] != 'f')
+		{
+			str_new += "f" + std::to_string(counter) + str[i];
+			counter = 0;
+		}
+		else
+		if (counter)
+		{
+			counter++;
+		}
+		else
+		{
+			str_new += str[i];
+		}
+	}
+
+	// update string and reset
+	str = str_new;
+	str_new = "";
+
+	// remove all pb's
+	for (size_t i = 0; i < str.length(); ++i)
+	{
+		if (!counter && str[i] == 'p')
+		{
+			counter = 1;
+		}
+		else
+		if (counter && str[i] == 'b')
+		{
+			if (i == str.length() - 1)
+				str_new += "p" + std::to_string(counter) + "b";
+			else continue;
+			
+		}
+		else
+		if (counter && str[i] == 'p')
+		{
+			counter++;
+		}
+		else
+		if (counter && str[i] != 'p')
+		{
+			str_new += "p" + std::to_string(counter) + "b" + str[i];
+			counter = 0;
+		}
+		else
+		{
+			str_new += str[i];
+		}
+	}
+
+	return str_new;
+
+}
+
 std::string SokobanSolver::getSolution(State* solution_state)
 {
 	
@@ -293,19 +363,21 @@ std::string SokobanSolver::getSolution(State* solution_state)
 	}
 	// Return the reversed solution string.
 	std::reverse(solution.begin(),solution.end());
-	
-
 
 	for (int i = 0; i < this->m_map_name.length(); i++) {
 		if (this->m_map_name[i] == '/')
 			this->m_map_name = this->m_map_name.substr(i + 1,this->m_map_name.length());
 	}
 
-	std::cout << "solution 1 : " << solution << std::endl;
+	std::cout << "solution 1 : " << solution << std::endl << std::endl;
 
+	// convert to robot domain (abs to rel)
 	solution = cvtAbs2RelActions(solution);
+	std::cout << "solution 2 : " << solution << std::endl << std::endl;
 
-	std::cout << "solution 2 : " << solution << std::endl;
+	// compress solution string (fff -> f3)
+	solution = compress_string(solution);
+	std::cout << "solution 3 : " << solution << std::endl << std::endl;
 
 	std::ofstream output_file;
 	output_file.open("solutions/" + this->m_map_name);
