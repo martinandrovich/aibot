@@ -10,13 +10,16 @@ def forward(n = 1):
 	# reset the gyroscope
 	hw.gs.reset()
 
+	# set speed based on n
+	speed = (SPEED_FWD_FAST if n >= INTERSECTIONS_FOR_BOOST else SPEED_FWD)
+
 	# drive forward until (black) intersection noticed; minimum 500 ticks
 	# hw.motors.follow_line_until_intersection(DIST_FOLLOW_LINE_MIN, SPEED_FWD)
-	hw.motors.follow_line_until_n_intersections(n, DIST_BETWEEN_INTERSECTION, SPEED_FWD)
+	hw.motors.follow_line_until_n_intersections(n, DIST_BETWEEN_INTERSECTION, speed)
 
 	# constant forward offset
 	# drive forward with the gyroscope at 0 rad
-	hw.motors.follow_gyro_for(DIST_FOLLOW_GYRO, SPEED_FWD, 0)
+	hw.motors.follow_gyro_for(DIST_INTERSECTION_OFFSET, SPEED_OFFSET, 0)
 	
 	# align with the gyroscope
 	hw.motors.turn_degrees(hw.SpeedPercent(SPEED_TURN), -hw.gs.angle)
@@ -30,21 +33,23 @@ def push(n = 1):
 	hw.gs.reset()
 
 	# drive forward following line for X ticks to push can
-	hw.motors.follow_line_for_dist(DIST_PUSH_CAN, SPEED_FWD)
+	hw.motors.follow_line_for_dist(DIST_PUSH_CAN, SPEED_OFFSET)
 
 	# align with the gyroscope
-	# hw.motors.turn_degrees(hw.SpeedPercent(SPEED_TURN), -hw.gs.angle)
+	hw.motors.turn_degrees(hw.SpeedPercent(SPEED_TURN), -hw.gs.angle)
 
 def back():
 
 	# reset the gyroscope
 	hw.gs.reset()
 
-	# drive backwards for push can distance with the gyroscope at 0 rad
-	# hw.motors.follow_gyro_for(DIST_PUSH_CAN, -SPEED_FWD, 0)
-	hw.motors.follow_gyro_until_intersection(100, -SPEED_FWD, 0)
-	
+	# drive backwards until intersection with the gyroscope at 0 rad
+	hw.motors.follow_gyro_until_intersection(DIST_FOLLOW_LINE_MIN, -SPEED_REV, 0)
 
+	# constant forward offset
+	# drive forward with the gyroscope at 0 rad
+	hw.motors.follow_gyro_for(DIST_INTERSECTION_OFFSET, SPEED_OFFSET, 0)
+	
 	# align with the gyroscope
 	hw.motors.turn_degrees(hw.SpeedPercent(SPEED_TURN), -hw.gs.angle)
 
@@ -53,7 +58,7 @@ def turn(dir):
 	if (dir == "around"):
 		angle = 180
 
-	else
+	else:
 		angle = 90 * (-1 if dir == "left" else 1)
 	
 	hw.motors.turn_degrees(hw.SpeedPercent(SPEED_TURN), angle)
