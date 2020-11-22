@@ -22,6 +22,7 @@ from aibot.constants import *
 # sensor objects
 cs_l           = ColorSensor(ADDR_CS_L)
 cs_r           = ColorSensor(ADDR_CS_R)
+cs_f           = ColorSensor(ADDR_CS_F)
 
 gs             = GyroSensor(ADDR_GS)
 
@@ -34,6 +35,7 @@ motors         = MoveTank(ADDR_MOT_L, ADDR_MOT_R)
 motors.gyro    = gs
 motors.cs_r    = cs_r
 motors.cs_l    = cs_l
+motors.cs_f    = cs_f
 
 # ----------------------------------------------------------------------
 
