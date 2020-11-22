@@ -21,6 +21,7 @@ from aibot.constants import *
 # sensor objects
 cs_l           = ColorSensor(ADDR_CS_L)
 cs_r           = ColorSensor(ADDR_CS_R)
+cs_f           = ColorSensor(ADDR_CS_F)
 
 gs             = GyroSensor(ADDR_GS)
 
@@ -33,6 +34,7 @@ motors         = MoveTank(ADDR_MOT_L, ADDR_MOT_R)
 motors.gyro    = gs
 motors.cs_r    = cs_r
 motors.cs_l    = cs_l
+motors.cs_f    = cs_f
 
 # ----------------------------------------------------------------------
 
@@ -68,6 +70,15 @@ def follow_for_dist(self, dist, pos_start):
 	avg   = (pos_l + pos_r) / 2
 
 	return (avg <= dist)
+
+# MoveTank.follow_for_dist()
+def follow_until_cs_f(self, dist, pos_start):
+
+	# callback function, in order to know when a line is found when pushing can
+	
+	cs_f = self.cs_f.reflected_light_intensity
+
+	return (cs_f < FOLLOW_LINE_DUAL_TH_BLACK)
 
 # MoveTank.follow_until_intersection()
 def follow_until_intersection(self, min_dist, pos_start, th_black):
@@ -258,6 +269,29 @@ def follow_gyro_until_intersection(self, min_dist, speed, angle = 0):
 		min_dist     = min_dist,
 		pos_start    = pos_start,
 		th_black     = FOLLOW_LINE_DUAL_TH_BLACK
+	)
+
+# MoveTank.push_can_until_intersection()
+def push_can_until_intersection(self, n, dist_per_intersection, pos_start, th_black):
+
+	# callback function, in order to know when the can is places on an  intersection.
+
+	# follow the line for a specified speed stopping at an
+	# intersection after a minimum distance; use dual color sensor
+
+	pos_start = {"left": self.left_motor.position,
+              "right": self.right_motor.position}
+
+	self.follow_line_dual(
+		kp=FOLLOW_LINE_DUAL_P,
+		ki=FOLLOW_LINE_DUAL_I,
+		kd=FOLLOW_LINE_DUAL_D,
+		speed=SpeedPercent(speed),
+		sleep_time=SLEEP_TIME,
+		follow_for=follow_until_cs_f,
+		min_dist=min_dist,
+		pos_start=pos_start,
+		th_black=FOLLOW_LINE_DUAL_TH_BLACK
 	)
 
 # append extensions
