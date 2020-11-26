@@ -101,3 +101,25 @@ def test_push_can(n):
 
 	seq = "f2rf1rp1buf1lf1lf3lf1lp1buf1rf1rf1"
 	drive_repeat(seq, n)
+	
+def test_slip(n)
+
+	for i in range(n):
+	
+		# old method
+		forward(n)
+		hw.gs.reset()
+		hw.motors.follow_line_for_dist(DIST_PUSH_CAN, SPEED_OFFSET)
+		hw.motors.turn_degrees(hw.SpeedPercent(SPEED_TURN), -hw.gs.angle)
+		
+		# wait for input
+		input("waiting for input...")
+		
+		# new method
+		forward(n)
+		hw.gs.reset()
+		hw.motors.follow_line_until_can_intersection(SPEED_PUSH)
+		hw.motors.turn_degrees(hw.SpeedPercent(SPEED_TURN), -hw.gs.angle)
+		
+		# wait for input
+		input("waiting for input...")
