@@ -15,7 +15,7 @@ def forward(n = 1):
 
 	# drive forward until (black) intersection noticed; minimum 500 ticks
 	# hw.motors.follow_line_until_intersection(DIST_FOLLOW_LINE_MIN, SPEED_FWD)
-	hw.motors.follow_line_until_n_intersections(n, DIST_BETWEEN_INTERSECTION, speed)
+	hw.motors.follow_line_until_n_intersections(n, DIST_FOLLOW_LINE_MIN, speed)
 
 	# constant forward offset
 	# drive forward with the gyroscope at 0 rad
@@ -32,8 +32,8 @@ def push(n = 1):
 	# reset the gyroscope
 	hw.gs.reset()
 
-	# drive forward following line for X ticks to push can
-	hw.motors.follow_line_for_dist(DIST_PUSH_CAN, SPEED_OFFSET)
+	# drive foward with can until line intersection spotted with front sensor
+	hw.motors.follow_line_until_can_intersection(SPEED_PUSH)
 
 	# align with the gyroscope
 	hw.motors.turn_degrees(hw.SpeedPercent(SPEED_TURN), -hw.gs.angle)
@@ -84,16 +84,20 @@ def drive(sequence):
 
 def drive_repeat(sequence, n):
 
-	# square test:
-	# f1 l f1 l f1 l f1 l
-	
-	# push can test:
-	# f2 l f1 l p1b u f1 r f1 r f3 r f1 r p1b u f1 l f1 l f1
-
-	#  ⬚⬚
-	#  ⬚⊙
-	#  ⧋⬚
-	#  ⬚⬚
-
 	for i in range(n):
 		drive(sequence)
+		
+def test_square(n):
+
+	seq = "f1lf1lf1lf1l"
+	drive_repeat(seq, n)
+	
+def test_push_can(n):
+
+	#  ⬚ ⬚
+	#  ⬚ ⊙
+	#  ^ ⬚
+	#  ⬚ ⬚
+
+	seq = "f2rf1rp1buf1lf1lf3lf1lp1buf1rf1rf1"
+	drive_repeat(seq, n)
