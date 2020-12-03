@@ -24,7 +24,7 @@ def init():
 def run():
 
 	# filename = input("Path to file: ")
-	filename = "solutions/map1.txt"
+	filename = "solutions/map2.txt"
 
 	file = open(filename)
 	seq = file.read().replace("\n", " ")
