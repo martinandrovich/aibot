@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 
 import time
-import ctypes
 from math import pi
 
 from ev3dev2.sensor.lego import TouchSensor
@@ -135,10 +134,17 @@ def follow_until_n_intersections(self, n, min_dist, pos_start, num_seen_intersec
 	return num_seen_intersections[0] < n
 		
 # MoveTank.follow_until_can_intersection()
-def follow_until_can_intersection(self, pos_start, th_black):
+def follow_until_can_intersection(self, pos_start, min_dist, th_black):
 
 	# th_black = value of LS to categorize as BLACK
 	# callback function, in order to know when a line is found when pushing can
+	
+	pos_l = abs(self.current_pos()["left"]  - pos_start["left"])
+	pos_r = abs(self.current_pos()["right"] - pos_start["right"])
+	avg   = (pos_l + pos_r) / 2
+
+	if avg < min_dist:
+		return True
 	
 	ls_f = self.ls_f.reflected_light_intensity
 
@@ -232,7 +238,8 @@ def follow_line_until_can_intersection(self, speed):
 		sleep_time = SLEEP_TIME,
 		follow_for = follow_until_can_intersection,
 		pos_start  = pos_start,
-		th_black   = LS_TH_BLACK
+		min_dist   = 100,
+		th_black   = LS_TH_BLACK,
 	)
 
 

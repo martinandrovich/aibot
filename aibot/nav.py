@@ -30,13 +30,13 @@ def push(n = 1):
 	forward(n)
 	
 	# reset the gyroscope
-	hw.gs.reset()
+	# hw.gs.reset()
 
 	# drive foward with can until line intersection spotted with front sensor
 	hw.motors.follow_line_until_can_intersection(SPEED_PUSH)
 
 	# align with the gyroscope
-	hw.motors.turn_degrees(hw.SpeedPercent(SPEED_TURN), -hw.gs.angle)
+	# hw.motors.turn_degrees(hw.SpeedPercent(SPEED_TURN), -hw.gs.angle)
 
 def back():
 
@@ -51,10 +51,13 @@ def back():
 	hw.motors.follow_gyro_for(DIST_INTERSECTION_OFFSET, SPEED_OFFSET, 0)
 	
 	# align with the gyroscope
-	hw.motors.turn_degrees(hw.SpeedPercent(SPEED_TURN), -hw.gs.angle)
+	# hw.motors.turn_degrees(hw.SpeedPercent(SPEED_TURN), -hw.gs.angle)
 
 def turn(dir):
 
+	# reset the gyroscope
+	hw.gs.reset()
+	
 	if (dir == "around"):
 		angle = 180
 
@@ -102,7 +105,7 @@ def test_push_can(n):
 	seq = "f2rf1rp1buf1lf1lf3lf1lp1buf1rf1rf1"
 	drive_repeat(seq, n)
 	
-def test_slip(n)
+def test_slip(n):
 
 	for i in range(n):
 	

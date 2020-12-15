@@ -4,10 +4,15 @@ from time import sleep
 
 from aibot import hw
 from aibot import nav
+from aibot.constants import *
 
 def init():
 
 	print("initializing aibot...")
+	
+	# print motor constants
+	print("using speeds: ", SPEED_FWD, SPEED_FWD_FAST, SPEED_TURN, SPEED_REV, SPEED_OFFSET, SPEED_PUSH)
+	print("using thresholds: ", CS_TH_BLACK, LS_TH_BLACK)
 	
 	# halt and reset motors
 	hw.motors.stop()
