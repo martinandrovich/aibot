@@ -1,0 +1,11 @@
+.XXXX.XXXXXXXXX
+.X..XXX.......X
+XX.J.J..X.XXX.X
+X...J.XXXG.G..X
+X.XJJ.XXG.G.X.X
+X....JXG.G..X.X
+X.JX..J.GXG...X
+X..J..XG...GXXX
+X.JXXXXXX.MXX
+X..X....XXXX
+XXXX
