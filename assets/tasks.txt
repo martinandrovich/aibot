@@ -1,0 +1,6 @@
+> figure texts
+> abstract
+> citations
+> coordinate system in figure
+> evaluations (design + solver)
+> GitHub readme

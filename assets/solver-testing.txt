@@ -1,0 +1,6 @@
+python
+https://cmdlinetips.com/2014/03/how-to-run-a-shell-command-from-python-and-get-the-output/
+
+> iterate files
+> run binary and time it
+> append to file
