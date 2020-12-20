@@ -16,4 +16,4 @@ The mobile robot is controlled in `Python` using the [python-ev3dev2] library, a
 
 [project-pdf]: /assets/rb-aibot-report.pdf
 [python-ev3dev2]: https://github.com/ev3dev/ev3dev-lang-python
-[img-aibot]: /assets/img/robot-overview.pdf
+[img-aibot]: /assets/img/robot-overview.png
