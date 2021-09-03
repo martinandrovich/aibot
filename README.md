@@ -12,6 +12,8 @@ The objective is to: (a) solve the Sokoban puzzle by computing a sequence of act
 
 The mobile robot is controlled in `Python` using the [python-ev3dev2] library, and the solver is written `C++` using a breadth-first search algorithm. The full project is [documented here][project-pdf].
 
+The system can be configured by [flashing a clean install of `ev3dev` onto the SD card](https://www.ev3dev.org/docs/getting-started/). Then, [an SSH network connection can be established](https://www.ev3dev.org/docs/tutorials/connecting-to-the-internet-via-usb/), allowing to connect to the aibot with username `robot` and password `maker`.
+
 <!-- LINKS -->
 
 [project-pdf]: /assets/rb-aibot-report.pdf
